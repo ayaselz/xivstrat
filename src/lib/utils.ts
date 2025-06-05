@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-const timeSchema = z.union([
+export const timeSchema = z.union([
   z.number(), // 127.4
   z.string().regex(/^\d+(?:\.\d+)?$/), // '127.4'
   z.string().regex(/^(?:[0-5]\d|\d):(?:[0-5]\d|\d)(?:\.\d+)?$/), // '02:07.4'
