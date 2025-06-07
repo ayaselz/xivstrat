@@ -1,18 +1,18 @@
 import { z } from 'astro:content'
 
 import { variantType } from '@/lib/variant'
-import { timeSchema } from './utils';
-import Badge from '@/components/Badge.astro';
+
+import { timeSchema } from './utils'
 
 const attackObj = z.object({
   type: z.literal('attack').default('attack'),
   time: timeSchema,
-  base: timeSchema.optional(),  // 保留？
+  base: timeSchema.optional(), // 保留？
   name: z.string().optional(),
   nameVariant: z.enum(variantType).optional(),
   damage: z.string(),
   damageType: z.enum(['physical', 'magical', 'special']),
-}).strip();
+}).strip()
 // strict, passthrough, strip 选择处理多余的传入
 const eventObj = z.object({
   type: z.literal('event').default('event'),
@@ -21,7 +21,7 @@ const eventObj = z.object({
   class: z.string().optional(),
   content: z.string().optional(),
   component: z.string().optional(),
-}).strip();
+}).strip()
 
 const castObj = z.object({
   type: z.literal('cast').default('cast'),
@@ -31,13 +31,13 @@ const castObj = z.object({
   ability: z.string().default(''),
   badge: z.string().optional(),
   badgeVariant: z.enum(variantType).optional()
-}).strip();
+}).strip()
 
 const timelineObj = z.discriminatedUnion('type', [
   attackObj,
   eventObj,
   castObj
-]);
+])
 
 export const timelineSchema = z.object({
   duty: z.string(),
@@ -47,4 +47,4 @@ export const timelineSchema = z.object({
       data: z.array(timelineObj)
     })
   )
-});
+})

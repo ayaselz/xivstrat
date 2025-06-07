@@ -4,9 +4,9 @@ import { castComponentMap } from '@/lib/castComponentMap'
 import { eventComponentMap } from '@/lib/eventComponentMap'
 import { timeToSeconds } from '@/lib/utils'
 
-import DutyStratLayout from '@/layouts/DutyStratLayout.astro'
+import solution from './solution.mdx'
 
-import Badge from '@/components/Badge.astro'
+import DutyStratLayout from '@/layouts/DutyStratLayout.astro'
 
 import AttackSection from '@/components/section/AttackSection.astro'
 import CastSection from '@/components/section/CastSection.astro'
@@ -16,28 +16,35 @@ const dutyId = '07/m5s'
 const base = 0
 const currentHref = Astro.url.pathname
 
-const timelineData = (await getEntry('timeline', dutyId))!.data.phases;
-const sections = timelineData.find(p => p.href === currentHref)?.data ?? []
+const timelineData = (await getEntry('timeline', dutyId))!.data.phases
+const sections = timelineData.find((p) => p.href === currentHref)?.data ?? []
 sections.sort((a, b) => timeToSeconds(a.time) - timeToSeconds(b.time))
+// mdx处理
 ---
 
 <DutyStratLayout dutyId={dutyId}>
-  {sections.map(e => {
-    if (e.type === 'attack') return <AttackSection time={e.time} base={base} damage={e.damage} damageType={e.damageType}/>
-    if (e.type === 'event') {
-      if (e.component && e.component in eventComponentMap) {
-        const EventComponent = eventComponentMap[e.component]
-        return <EventComponent time={e.time} base={base} />
-      } 
-      return <EventSection time={e.time} base={base}>{e.content}</EventSection>
-    }
-    if (e.type === 'cast') {
-      if (e.ability && e.ability in castComponentMap) {
-        const CastComponent = castComponentMap[e.ability]
-        return <CastComponent start={e.time} base={base} />
+  {
+    sections.map((e) => {
+      if (e.type === 'attack')
+        return <AttackSection time={e.time} base={base} damage={e.damage} damageType={e.damageType} />
+      if (e.type === 'event') {
+        if (e.component && e.component in eventComponentMap) {
+          const EventComponent = eventComponentMap[e.component]
+          return <EventComponent time={e.time} base={base} />
+        }
+        return (
+          <EventSection time={e.time} base={base}>
+            {e.content}
+          </EventSection>
+        )
       }
-      return <CastSection start={e.time} base={base} duration={e.duration} ability={e.ability}/>
-    }
-  })}
-
+      if (e.type === 'cast') {
+        if (e.ability && e.ability in castComponentMap) {
+          const CastComponent = castComponentMap[e.ability]
+          return <CastComponent start={e.time} base={base} />
+        }
+        return <CastSection start={e.time} base={base} duration={e.duration} ability={e.ability} />
+      }
+    })
+  }
 </DutyStratLayout>
