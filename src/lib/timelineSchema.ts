@@ -33,10 +33,20 @@ const castObj = z.object({
   badgeVariant: z.enum(variantType).optional()
 }).strip()
 
+export const noteSchema = z.object({
+  type: z.enum(['mechanic', 'solution', 'note']),
+  dutyId: z.string(),
+  phase: z.string(),
+  time: timeSchema,
+  author: z.string(),
+  layout: z.string()
+})
+
 const timelineObj = z.discriminatedUnion('type', [
   attackObj,
   eventObj,
-  castObj
+  castObj,
+  noteSchema
 ])
 
 export const timelineSchema = z.object({

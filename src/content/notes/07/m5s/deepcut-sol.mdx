@@ -1,0 +1,45 @@
+---
+type: "solution"
+dutyId: "07/m5s"
+phase: "p1"
+time: "00:09.173"
+author: "spjp"
+layout: "@/layouts/Layout.astro"
+---
+import { Image } from 'astro:assets'
+
+import Boss from '@/components/Boss.astro'
+import Bleeding from '@/components/buff/Bleeding.astro'
+import RoleIcon from '@/components/RoleIcon.astro'
+import SolutionSection from '@/components/section/SolutionSection.astro'
+import Span from '@/components/Span.vue'
+
+import deep_cut_img from '@/assets/07/m5s/deep_cut.png'
+
+<SolutionSection>
+    <div class="flex gap-4">
+        <div class="max-w-90 shrink">
+        <Image src={deep_cut_img} alt="Deep Cut Solution" class="border-2 border-amber-800/75 dark:border-amber-100" />
+        </div>
+        <div class="shrink-0 grow space-y-4">
+        <div class="gap-strat flex items-center">
+            <RoleIcon role="tank" tag="MT" />
+            在
+            <Boss />
+            <Span variant="pink">左前</Span>
+            引导，
+            <RoleIcon role="tank" tag="ST" />
+            在
+            <Boss />
+            <Span variant="pink">右前</Span>
+            引导
+        </div>
+        <div class="gap-strat flex items-center">
+            由于首次出现在开场不久，
+            <RoleIcon role="tank" tag="ST" />
+            注意
+            <Span variant="pink">及时建立仇恨</Span>
+        </div>
+        </div>
+    </div>
+</SolutionSection>

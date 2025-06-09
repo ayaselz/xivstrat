@@ -1,7 +1,7 @@
 import { defineCollection, reference, z } from 'astro:content'
 import { file, glob } from 'astro/loaders'
 
-import { timelineSchema } from '@/lib/timelineSchema'
+import { noteSchema, timelineSchema } from '@/lib/timelineSchema'
 
 const duties = defineCollection({
   loader: glob({ pattern: '**/[^_]*.json', base: './src/data/duties' }),
@@ -54,4 +54,9 @@ const timeline = defineCollection({
   schema: timelineSchema
 })
 
-export const collections = { duties, dutyGroups, timeline } 
+const notes = defineCollection({
+  type: 'content',
+  schema: noteSchema
+})
+
+export const collections = { duties, dutyGroups, timeline, notes }

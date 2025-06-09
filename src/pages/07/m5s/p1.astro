@@ -1,16 +1,18 @@
 ---
-import { getEntry } from 'astro:content'
+import { getEntry, getCollection } from 'astro:content'
 import { castComponentMap } from '@/lib/castComponentMap'
 import { eventComponentMap } from '@/lib/eventComponentMap'
 import { timeToSeconds } from '@/lib/utils'
-
-import solution from './solution.mdx'
 
 import DutyStratLayout from '@/layouts/DutyStratLayout.astro'
 
 import AttackSection from '@/components/section/AttackSection.astro'
 import CastSection from '@/components/section/CastSection.astro'
 import EventSection from '@/components/section/EventSection.astro'
+import NoteSection from '@/components/section/NoteSection.astro'
+import MechanicSection from '@/components/section/MechanicSection.astro'
+import SolutionSection from '@/components/section/SolutionSection.astro'
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js'
 
 const dutyId = '07/m5s'
 const base = 0
@@ -18,13 +20,32 @@ const currentHref = Astro.url.pathname
 
 const timelineData = (await getEntry('timeline', dutyId))!.data.phases
 const sections = timelineData.find((p) => p.href === currentHref)?.data ?? []
-sections.sort((a, b) => timeToSeconds(a.time) - timeToSeconds(b.time))
+// sections.sort((a, b) => timeToSeconds(a.time) - timeToSeconds(b.time))
 // mdx处理
+const allMdxEntries = await getCollection('notes')
+const mdxSections = await Promise.all(
+  allMdxEntries
+    .filter((entry) => entry.data.dutyId === dutyId && entry.data.phase === currentHref.split('/').pop())
+    .map(async (entry) => {
+      const { Content } = await entry.render()
+      return {
+        ...entry.data, // time, type, author
+        Content, // 页面组件
+      }
+    }),
+)
+// 合并处理
+const merged = [...sections, ...mdxSections]
+merged.sort((a, b) => timeToSeconds(a.time) - timeToSeconds(b.time))
 ---
 
 <DutyStratLayout dutyId={dutyId}>
   {
-    sections.map((e) => {
+    merged.map((e) => {
+      if ('Content' in e) {
+        const entry = e as { Content: AstroComponentFactory } // 辅助类防报错
+        return <entry.Content components={{ NoteSection, MechanicSection, SolutionSection }} />
+      }
       if (e.type === 'attack')
         return <AttackSection time={e.time} base={base} damage={e.damage} damageType={e.damageType} />
       if (e.type === 'event') {

@@ -1,0 +1,31 @@
+---
+type: "mechanic"
+dutyId: "07/m5s"
+phase: "p1"
+time: "00:09.173"
+author: "spjp"
+layout: "@/layouts/Layout.astro"
+---
+import Bleeding from '@/components/buff/Bleeding.astro'
+import DamageInfo from '@/components/DamageInfo.astro'
+import DotInfo from '@/components/DotInfo.astro'
+import MagicVulnerabilityUp from '@/components/buff/MagicVulnerabilityUp.astro'
+import MechanicSection from '@/components/section/MechanicSection.astro'
+import Span from '@/components/Span.vue'
+
+<MechanicSection>
+    <div class="gap-strat flex items-center">
+        点名
+        <Span variant="pink">一二仇</Span>
+        的
+        <Span variant="pink">45°扇形死刑</Span>
+        ，对
+        <Span variant="blue">防护职业</Span>
+        造成
+        <DamageInfo damage="300000" type="magical" />
+        <MagicVulnerabilityUp tag="2" hover />
+        ，附加
+        <Bleeding hover tag="15" />
+        <DotInfo damage="34000" />
+    </div>
+</MechanicSection>
